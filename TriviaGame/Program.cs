@@ -14,7 +14,6 @@ namespace TriviaGame{
                 using (var qmlEngine = new QQmlApplicationEngine()){
                     Qml.Net.Qml.RegisterType<Login>("TriviaGame",1,0);
                     qmlEngine.Load("Main.qml");
-                    
                     return application.Exec();
                 }
             }
