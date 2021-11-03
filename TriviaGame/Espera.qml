@@ -45,6 +45,40 @@ Page{
             topMargin: 50
             bottomMargin: 100
         }
+        
+        JogadoresItem{
+            id: jogadores
+            anchors.left : tela.left
+            anchors.leftMargin : 50
+            anchors.top: tela.top
+            anchors.topMargin: 50
+            anchors.bottom: tela.bottom
+        }
+
+        Knob {
+            id: progressBar
+            anchors.verticalCenter : tela.verticalCenter
+            anchors.right: tela.right
+            anchors.rightMargin: 50
+            width: 200
+            height: 200
+            from:0
+            to: 100
+            value: 50
+            fromAngle: 0
+            toAngle: Math.PI*2
+            reverse: false
+        }
+
+        Chat{
+            id:chat
+            anchors.fill: parent
+            anchors.topMargin: 50
+            anchors.leftMargin: (jogadores.width + 280)
+            anchors.rightMargin: (progressBar.width + 80)
+        }
     }
+
+
 
 }
