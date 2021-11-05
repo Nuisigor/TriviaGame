@@ -18,6 +18,9 @@ namespace TriviaGame{
             },
             new Jogador{
                 Nome = "Joao"
+            },
+            new Jogador{
+                Nome = "Tchubi"
             }
         };
         
