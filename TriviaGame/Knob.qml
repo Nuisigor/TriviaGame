@@ -28,7 +28,7 @@ Item {
     property int fontSize: height / 7
 
     property color knobBackgroundColor: Qt.rgba(0.1, 0.1, 0.1, 0.1)
-    property color knobColor: Qt.rgba(1, 0, 0, 1)
+    property color knobColor: "#2624e3"
 
     property string title: ""
     property alias titleFont: labelTitle.font.family
@@ -39,7 +39,7 @@ Item {
         knob.value = value
         canvas.requestPaint()
         background.requestPaint()
-        label.text = value.toFixed(2);
+        label.text = value;
     }
 
     Text {

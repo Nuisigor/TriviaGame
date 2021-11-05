@@ -29,7 +29,7 @@ Item{
             }
             radius: 5
             height: 50
-            color: "blue"
+            color: "#2624e3"
             Text{
                 id: aguardandoText
                 anchors{

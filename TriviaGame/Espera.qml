@@ -1,10 +1,14 @@
 import QtQuick 2.15
 import QtQuick.Layouts 1.3
-import QtQuick.Controls 2.15
+import QtQuick.Controls 2.3
 import QtQuick.Controls.Material 2.1
+import QtQuick.Window 2.12
+import TriviaGame 1.0
 
 Page{
     id: esperaPage
+
+    signal jogo
 
     Rectangle{
         id: header
@@ -14,6 +18,11 @@ Page{
             left: parent.left
             top: parent.top
             right: parent.right
+        }
+        Button{
+            id: botaoheader
+            text: "Texto"
+            onClicked: progressBar.addProgress()
         }
     }
 
@@ -63,11 +72,17 @@ Page{
             width: 200
             height: 200
             from:0
-            to: 100
-            value: 50
+            to: 101
+            value: 20
             fromAngle: 0
             toAngle: Math.PI*2
             reverse: false
+            function addProgress(){
+                update(value+20)
+                if(progressBar.value === 100){
+                    esperaPage.jogo()
+                }
+            }
         }
 
         Chat{

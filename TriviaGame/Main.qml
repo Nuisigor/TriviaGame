@@ -5,13 +5,12 @@ import QtQuick.Controls.Material 2.1
 import QtQuick.Window 2.12
 import TriviaGame 1.0
 
-Window {
+ApplicationWindow {
     id: window
     width: 1280
     height: 720
     visible: true
     title: "Trivia"
-
 
     StackView{
         id: stackView
@@ -241,7 +240,7 @@ Window {
                                 else{
                                     validate.text = qsTr("")
                                     logincs.dataWrite(inputUser.text, inputIP.text)
-                                    stackView.push("Espera.qml")
+                                    stackView.push("Aguardando.qml")
                                 }
                             }
                         }

@@ -1,4 +1,5 @@
 import QtQuick 2.15
+import QtQml 2.15
 import QtQuick.Controls.Material 2.5
 import QtQuick.Controls 2.2
 import TriviaGame 1.0
@@ -30,39 +31,41 @@ Item{
             anchors.rightMargin: 20
             border.color: "black"
             radius: 5
-            // Component{
-            //     id: messageDelegate
-            //     Item{
-            //         with: mensagens.width / 1.2
-            //         height: mensagens.height / 8
-            //         Column{
-            //             Rectangle{
-            //                 anchors.fill: parent
-            //                 color: "#771609"
-            //                 Text{
-            //                     id: nome
-            //                     text: model.nome
-            //                     color: "#FFFFFF"
-            //                     anchors.left: parent.left
-            //                     anchors.top: parent.top
-            //                     anchors.leftMargin: 10
-            //                     anchors.topMargin: 10
-            //                     font.pixelSize: 15
-            //                 }
-            //                 Text{
-            //                     id: mensagem
-            //                     text: model.mensagem
-            //                     color: "#FFFFFF"
-            //                     anchors.left: parent.left
-            //                     anchors.top: nome.bottom
-            //                 }
-            //             }
-            //         } 
-            //     }
-            // }
-            // ListView{
-
-            // }
+            Component{
+                id: messageDelegate
+                Item{
+                    width: mensagens.width / 1.2
+                    height: mensagens.height / 8    
+                    Column{
+                        spacing: 40
+                        Rectangle{
+                            anchors.left: parent.left
+                            anchors.leftMargin: 10
+                            width: mensagens.width / 1.2
+                            height: mensagens.height / 8 
+                            color: "#2624e3"
+                            Text{
+                                id: mensagem
+                                text: model.mensagem
+                                color: "#FFFFFF"
+                                anchors.left: parent.left
+                                anchors.top: parent.top
+                                anchors.bottom: parent.bottom
+                                verticalAlignment: Text.AlignVCenter
+                                anchors.leftMargin: 10
+                                font.pixelSize: 10
+                            }
+                        }
+                    } 
+                }
+            }
+            ListView{
+                spacing: 5
+                anchors.fill: parent
+                anchors.topMargin:20
+                model: MensagemModel{}
+                delegate: messageDelegate
+            }
         }
     
         Rectangle{
@@ -136,7 +139,7 @@ Item{
                 anchors.rightMargin: 10
                 Button{
                     anchors.fill: parent
-                    background: Image{source: "data/outline_send_white_36dp.png"}
+                    background: Image{source: "img/outline_send_white_36dp.png"}
                     MouseArea{
                         anchors.fill: parent
                         cursorShape: Qt.PointingHandCursor
