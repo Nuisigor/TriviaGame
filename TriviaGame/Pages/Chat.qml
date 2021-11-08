@@ -139,7 +139,7 @@ Item{
                 anchors.rightMargin: 10
                 Button{
                     anchors.fill: parent
-                    background: Image{source: "img/outline_send_white_36dp.png"}
+                    background: Image{source: "../img/outline_send_white_36dp.png"}
                     MouseArea{
                         anchors.fill: parent
                         cursorShape: Qt.PointingHandCursor

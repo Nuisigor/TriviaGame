@@ -14,7 +14,7 @@ Item{
         border.color : "black"
         border.width : 2
         height : parent.height / 1.1
-        width : 200
+        width : parent.width / 2
         radius: 20
         
         Rectangle{

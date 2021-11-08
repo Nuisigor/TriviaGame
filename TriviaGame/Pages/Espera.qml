@@ -55,6 +55,28 @@ Page{
             bottomMargin: 100
         }
         
+
+        Knob {
+            id: progressBar
+            anchors.verticalCenter : tela.verticalCenter
+            anchors.right: tela.right
+            anchors.rightMargin: 50
+            width: parent.height / 1.3
+            height: parent.height / 1.3
+            from: 0
+            to: 100
+            value: 80
+            fromAngle: 0
+            toAngle: Math.PI*2
+            reverse: false
+            function addProgress(){
+                update(value-80)
+                if(progressBar.value === 0){
+                    esperaPage.jogo()
+                }
+            }
+        }
+
         JogadoresItem{
             id: jogadores
             anchors.left : tela.left
@@ -62,38 +84,9 @@ Page{
             anchors.top: tela.top
             anchors.topMargin: 50
             anchors.bottom: tela.bottom
-        }
-
-        Knob {
-            id: progressBar
-            anchors.verticalCenter : tela.verticalCenter
             anchors.right: tela.right
-            anchors.rightMargin: 50
-            width: 200
-            height: 200
-            from:0
-            to: 101
-            value: 20
-            fromAngle: 0
-            toAngle: Math.PI*2
-            reverse: false
-            function addProgress(){
-                update(value+20)
-                if(progressBar.value === 100){
-                    esperaPage.jogo()
-                }
-            }
-        }
-
-        Chat{
-            id:chat
-            anchors.fill: parent
-            anchors.topMargin: 50
-            anchors.leftMargin: (jogadores.width + 280)
-            anchors.rightMargin: (progressBar.width + 80)
         }
     }
-
 
 
 }
