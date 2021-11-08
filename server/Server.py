@@ -23,21 +23,23 @@ class Server:
       threading.Thread(target=self.handleClient, args=(client, address)).start()
 
   def handleClient(self, client, address):
-    with client:
-      name = client.recv(1024).decode()
-      if name in self.clients:
-        client.close()
-        return
-      client = Client(client, address, name)
-      self.clients[name] = client
+    try:
+      with client:
+        name = client.recv(1024).decode()
+        if name in self.clients:
+          client.close()
+          return
+        client = Client(client, address, name)
+        self.clients[name] = client
 
-      while True:
-        data = client.recv()
-        if not data:
-          break
-        print(data)
-        client.sendall(data)
-
+        while True:
+          data = client.recv()
+          if not data:
+            break
+          print(f'[{client}]: {data}')
+          self.send(f'{client}: {data}')        
+    except:
+      print(f'Lost connection to client {client}')
     del self.clients[name]
   
   def send(self, data, name=None):

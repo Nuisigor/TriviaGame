@@ -11,6 +11,7 @@ namespace TriviaGame{
             Console.WriteLine(inputIP);
             
             await Program.socket.Connect(inputIP);
+            Program.socket.Receive();
             Program.socket.Send(inputUser);
         }
     }

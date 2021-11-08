@@ -14,6 +14,9 @@ namespace TriviaGame{
         private bool connected;
         private NetworkStream stream;
 
+        public delegate void ChatMessageReceivedHandler(string message);
+        public event ChatMessageReceivedHandler ChatMessageReceived;
+
         public async Task Connect(string address) {
             string[] addressParts = address.Split(':');
             ip = addressParts[0];
@@ -32,6 +35,14 @@ namespace TriviaGame{
             }
         }
 
+        public void Close() {
+            if (connected) {
+                connected = false;
+                stream.Close();
+                client.Close();
+            }
+        }
+
         public async Task Receive() {
             byte[] buffer = new byte[1024];
 
@@ -42,6 +53,7 @@ namespace TriviaGame{
                 string msg = Encoding.ASCII.GetString(buffer, 0, bufferSize);
 
                 Console.WriteLine(msg);
+                OnChatMessageReceived(msg);
             }
 
             Close();
@@ -54,12 +66,12 @@ namespace TriviaGame{
             }
         }
 
-        public void Close() {
-            if (connected) {
-                connected = false;
-                stream.Close();
-                client.Close();
+        public virtual void OnChatMessageReceived(string message) {
+            if (ChatMessageReceived != null) {
+                Console.WriteLine("OnChatMessageReceived: " + message);
+                ChatMessageReceived(message);
             }
         }
+
     }
 }
