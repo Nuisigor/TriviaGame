@@ -35,6 +35,7 @@ class Server:
         data = client.recv()
         if not data:
           break
+        print(data)
         client.sendall(data)
 
     del self.clients[name]
@@ -57,3 +58,8 @@ class Server:
       if cmd == 'broadcast':
         data = ' '.join(command)
         self.send(data)
+      if cmd == 'list':
+        if len(self.clients):
+          print(', '.join(self.clients.keys()))
+        else:
+          print('Ninguem conectado')

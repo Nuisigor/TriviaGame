@@ -1,12 +1,17 @@
 
 using System;
+using System.Threading.Tasks;
+
 
 namespace TriviaGame{
 
     public class Login{
-        public void dataWrite(string inputUser, string inputIP){
+        public async Task dataWrite(string inputUser, string inputIP){
             Console.WriteLine(inputUser);
             Console.WriteLine(inputIP);
+            
+            await Program.socket.Connect(inputIP);
+            Program.socket.Send(inputUser);
         }
     }
 }

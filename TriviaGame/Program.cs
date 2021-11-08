@@ -4,7 +4,10 @@ using Qml.Net;
 using Qml.Net.Runtimes;
 
 namespace TriviaGame{
+
     class Program{
+        public static ClientSocket socket = new ClientSocket();
+
         static int Main(string[] args){
             RuntimeManager.DiscoverOrDownloadSuitableQtRuntime();
             
