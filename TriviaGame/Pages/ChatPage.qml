@@ -42,7 +42,7 @@ Item{
                             anchors.left: parent.left
                             anchors.leftMargin: 10
                             width: mensagens.width / 1.2
-                            height: mensagens.height / 8 
+                            height: mensagens.height / 10
                             color: "#2624e3"
                             Text{
                                 id: mensagem
@@ -53,18 +53,26 @@ Item{
                                 anchors.bottom: parent.bottom
                                 verticalAlignment: Text.AlignVCenter
                                 anchors.leftMargin: 10
-                                font.pixelSize: 10
+                                font.pixelSize: 14
                             }
                         }
                     } 
                 }
             }
             ListView{
-                spacing: 5
+                id: listachat
+                spacing: 2
+                clip:true
                 anchors.fill: parent
                 anchors.topMargin:20
-                model: MensagemModel{}
+                anchors.bottomMargin:20
+                model: chatList
                 delegate: messageDelegate
+                onCountChanged: {
+                    var newIndex = count - 1 // last index
+                    positionViewAtEnd()
+                    currentIndex = newIndex
+                }
             }
         }
     
@@ -151,10 +159,19 @@ Item{
             function sendMessage(){
                 var message = texto.text
                 if(message !== ""){
+                    chatCs.messageSend(texto.text)
                     texto.text = qsTr("")
                 }
             }
         }
-
+    }
+    ListModel{
+        id: chatList
+    }
+    Chat{
+        id: chatCs
+        onMessageReceived: function(message){
+            chatList.append({"mensagem": message})
+        }
     }
 }
