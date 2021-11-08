@@ -48,7 +48,7 @@ Page{
             
         }
 
-        Chat{
+        ChatPage{
             id: chat
             anchors.right: parent.right
             anchors.top: tema.bottom

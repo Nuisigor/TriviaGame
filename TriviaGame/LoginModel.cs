@@ -7,6 +7,7 @@ namespace TriviaGame{
         public void dataWrite(string inputUser, string inputIP){
             Console.WriteLine(inputUser);
             Console.WriteLine(inputIP);
+            // ClientSocket client = new ClientSocket(inputUser,inputIP);
         }
     }
 }
