@@ -3,7 +3,7 @@
 from os import name
 import socket, threading
 from datetime import datetime
-from Server import Server
+from ServerClass import Server
 
 PORT = 1337
 
