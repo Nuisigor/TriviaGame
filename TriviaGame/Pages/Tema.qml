@@ -5,6 +5,9 @@ import TriviaGame 1.0
 
 Item{
     id: temaDialog
+
+    signal temaDialogFechar
+
     Rectangle{
         id: rect1
         anchors.fill : parent
@@ -165,6 +168,9 @@ Item{
             anchors.top: resposta.bottom
             anchors.left: parent.left
             anchors.right: parent.right
+            onClicked:{
+                temaDialog.validate();
+            }
         }
         ProgressBar{
             id: barra
@@ -175,4 +181,19 @@ Item{
             anchors.bottom: parent.bottom
         }
     }
+
+    function validate(){
+        var tema = texto.text;
+        var dica = texto1.text;
+        var resposta = texto2.text;
+        if(tema !== "" && dica !== "" && resposta !== ""){
+            temaCs.sendTema(tema,dica,resposta);
+            temaDialog.temaDialogFechar();
+        }
+    }
+    
+    TemaModel{
+        id: temaCs
+    }
+
 }

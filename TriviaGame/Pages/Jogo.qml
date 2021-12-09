@@ -78,10 +78,21 @@ Page{
         Tema{
             id: temaPane
             anchors.fill: parent
+            onTemaDialogFechar : temaPop.close()
         }
+
+        
+
         Component.onCompleted:{
             temaPop.open()
         }
     }
-    
+
+    TemaModel{
+        id: temaX
+        onTemaJogo: function(tema){
+            console.log(tema)
+        }
+    }
+
 }

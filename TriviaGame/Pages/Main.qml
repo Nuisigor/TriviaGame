@@ -140,6 +140,7 @@ ApplicationWindow {
                                     x: 8
                                     y: 8
                                     width: 433
+                                    focus: true
                                     height: 79
                                     font.pixelSize: 30
                                     horizontalAlignment: Text.AlignHCenter
@@ -151,6 +152,9 @@ ApplicationWindow {
                                         anchors.fill: parent
                                         cursorShape: Qt.IBeamCursor
                                         acceptedButtons: Qt.NoButton
+                                    }
+                                    Keys.onTabPressed:{
+                                        inputIP.forceActiveFocus()
                                     }
                                 }
                             }
@@ -181,6 +185,7 @@ ApplicationWindow {
                                     y: 8
                                     width: 433
                                     height: 79
+                                    focus:true
                                     font.pixelSize: 21
                                     horizontalAlignment: Text.AlignHCenter
                                     verticalAlignment: Text.AlignVCenter
@@ -191,6 +196,11 @@ ApplicationWindow {
                                         anchors.fill: parent
                                         cursorShape: Qt.IBeamCursor
                                         acceptedButtons: Qt.NoButton
+                                    }
+                                    Keys.onPressed:{
+                                        if((event.key == Qt.Key_Enter) || (event.key == Qt.Key_Return)){
+                                            login1.isValid();
+                                        }
                                     }
                                 }
                             }
