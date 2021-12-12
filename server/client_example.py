@@ -3,7 +3,7 @@
 import socket, threading
 
 HOST = '127.0.0.1'
-PORT = 1337
+PORT = 1338
 
 def send(s):
   while True:

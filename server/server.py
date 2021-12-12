@@ -5,6 +5,6 @@ import socket, threading
 from datetime import datetime
 from ServerClass import Server
 
-PORT = 1337
+PORT = 1338
 
 Server(PORT)

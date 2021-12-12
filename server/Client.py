@@ -3,6 +3,7 @@ class Client:
     self.conn = conn
     self.addr = addr
     self.name = name
+    self.pontos = 0
   
   def __str__(self):
     return self.name
@@ -15,3 +16,6 @@ class Client:
 
   def sendall(self, msg):
     self.conn.sendall(msg.encode())
+
+  def add_pontos(self, pontos):
+    self.pontos += pontos
