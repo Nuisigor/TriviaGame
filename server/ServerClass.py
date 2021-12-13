@@ -114,16 +114,16 @@ class Server:
   '''
   def handleAnswer(self, resposta, name):
     if not self.roundAtivo:
-      return
+      return False
 
     round = self.tema[self.rodada - 1]
 
-    if round['dono'] == name:
-      return
+    if round['dono'] == name or name in round['acertos']:
+      return True
 
     respostaCorreta = round['resposta']
 
-    if(name not in round['acertos'] and respostaCorreta == resposta):
+    if(respostaCorreta == resposta):
       self.tema[self.rodada - 1]['acertos'].append(name)
       self.add_ponto(name)
       self.send(f'c{name}')
