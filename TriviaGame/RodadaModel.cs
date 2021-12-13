@@ -19,7 +19,7 @@ namespace TriviaGame{
                 if(message == Program.nomePlayer){
                     this.ActivateSignal("rodadaOwner");
                 }
-                string mensagem = $"Rodada começou : {message} é o Game Master da Rodada";
+                string mensagem = $"Rodada : {message} é o Game Master da Rodada";
                 this.ActivateSignal("rodadaComecou",mensagem);
             }
 
@@ -37,6 +37,9 @@ namespace TriviaGame{
                 message = message.Substring(1);
                 string mensagem = $"{message} pessoas acertaram nessa rodada!";
                 this.ActivateSignal("rodadaFinalizada",mensagem);
+            }
+            if(protocol == 'W'){
+                this.ActivateSignal("respostaErrada");
             }
         }
 

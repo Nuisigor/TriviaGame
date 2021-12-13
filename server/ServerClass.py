@@ -19,6 +19,7 @@ PROTOCOLO = {
   'N': 'RESPOSTA PROXIMA',
   'W': 'RESPOSTA ERRADA',
   'a': 'TOTAL DE ACERTOS DA RODADA',
+  'Z': 'FINALIZADO'
 }
 
 class Server:
@@ -95,7 +96,6 @@ class Server:
     self.handleDisconnect(name)
   
   def send(self, data, name=None):
-    print('sending stuff',data,name)
     if name and name in self.clients:
       self.clients[name].send(data + '|')
       return
@@ -180,7 +180,7 @@ class Server:
 
     tema = currentTema['tema']
     dica = currentTema['dica']
-    resposta = currentTema['resposta'] #self.respostaCensurada()
+    resposta = self.respostaCensurada
   
     self.send(f'T{tema};{dica};{resposta}')
 
@@ -241,9 +241,23 @@ class Server:
     self.setStartRound()
     self.correct = 0
 
-  def getRespostaCensurada(self, resposta, showOrder):
-    #TODO: ARRUMAR
-    return
+  def getRespostaCensurada(self, resposta):
+    metadeTime = 30
+    ratio = self.roundDuration()/metadeTime
+    ratio = 1 if ratio > 1 else ratio
+    show = int(int(len(resposta) / 2) * ratio)
+
+    censored = ['_' for _ in range(len(resposta))]
+
+    respostaList = list(resposta)
+
+    for i in range(show):
+      pos = self.showOrder[i]
+      censored[pos] = respostaList[pos]
+
+    print(censored)
+
+    return ' '.join(censored)
 
   def roundDuration(self):
     return time.time() - self.startRound
@@ -257,7 +271,7 @@ class Server:
     
     while self.rodada != len(self.tema):
       if self.roundDuration() > 10:
-        self.send(f'OO jogador {self.owner} nao preencheu a tempo, trocando de mestre')
+        self.send(f'OO jogador {self.owner} nao preencheu a tempo')
         self.setupRound()
 
     self.broadcastInfo()
@@ -270,20 +284,23 @@ class Server:
 
     print(f'RODADA [{self.rodada}] -> {tema} - {dica} - {resposta}')
 
-    showOrder = random.shuffle(list(range(len(resposta))))
-    sent = 0
+    self.showOrder = list(range(len(resposta)))
+    random.shuffle(self.showOrder)
+
+    print(self.showOrder)
 
     self.setStartRound()
     self.roundAtivo = True
     self.send(f't{self.calcTempoRestante()}')
-    #TODO: VOLTAR PARA 12
-    while sent != 3:
-      self.respostaCensurada = resposta #self.getRespostaCensurada(resposta, showOrder)
+
+    sent = 0
+    while sent != 12:
+      self.respostaCensurada = self.getRespostaCensurada(resposta)
       self.sendTema()
       sent += 1
       time.sleep(5)
-      # if len(self.tema[self.rodada - 1]['acertos']) == len(self.clients) - 1:
-      #   break
+      if len(self.tema[self.rodada - 1]['acertos']) == len(self.clients) - 1:
+        break
 
     self.roundAtivo = False
 
@@ -292,10 +309,11 @@ class Server:
 
     dono = self.tema[self.rodada - 1]['dono']
 
-    self.add_ponto(dono, porcentagemPontos)
+    self.add_ponto(dono, int(porcentagemPontos))
     self.broadcastInfo()
     acertos = len(self.tema[self.rodada - 1]['acertos'])
     self.send(f'a{acertos}')
+    self.send('T;;')
     print('RODADA ACABOU')
 
   
@@ -314,4 +332,8 @@ class Server:
     print('JOGO COMECOU')      
     self.send('G')
     self.broadcastInfo()
-    self.round()
+
+    for i in range(len(self.clients) * 2):
+      self.round()
+      self.send('MRodada finalizada')
+      time.sleep(5)

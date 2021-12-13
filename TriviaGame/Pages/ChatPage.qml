@@ -178,13 +178,13 @@ Item{
     }
 
     
-    Audio{
+    SoundEffect{
         id: audioAcerto
         source: "../audio/Acerto.ogg"
     }
 
     
-    Audio{
+    SoundEffect{
         id: audioErro
         source: "../audio/Erro.ogg"
     }
@@ -203,6 +203,9 @@ Item{
         }
         onRodadaFinalizada: function(message){
             chatList.append({"mensagem":message, "cor":"#B3239D"})
+        }
+        onRespostaErrada: function(){
+            audioErro.play()
         }
     }
 

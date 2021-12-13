@@ -201,6 +201,9 @@ Item{
         onTriggered: {
             barra.value -= 1
             if(barra.value === 0){
+                texto.text = ""
+                texto1.text = ""
+                texto2.text = ""
                 temaDialog.temaDialogFechar()
             }
         }
