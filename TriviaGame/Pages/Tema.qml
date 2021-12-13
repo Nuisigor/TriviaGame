@@ -217,7 +217,7 @@ Item{
     RodadaModel{
         id: rodadaCs
         onRodadaOwner:{
-            barra.value = 10
+            barra.value = 15
             timeme.start()
         }
     }
