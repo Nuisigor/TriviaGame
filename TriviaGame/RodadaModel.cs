@@ -5,7 +5,7 @@ using Qml.Net.Runtimes;
 
 namespace TriviaGame{
 
-    [Signal("rodadaOwner"),Signal("rodadaComecou",NetVariantType.String),Signal("acerto",NetVariantType.String),Signal("respostaPerto",NetVariantType.String),Signal("respostaErrada"),Signal("selfAcerto"),Signal("rodadaFinalizada",NetVariantType.String)]
+    [Signal("rodadaOwner"),Signal("rodadaComecou",NetVariantType.String),Signal("acerto",NetVariantType.String),Signal("respostaPerto",NetVariantType.String),Signal("finalizaJogo"),Signal("selfAcerto"),Signal("rodadaFinalizada",NetVariantType.String),Signal("tempoRestante",NetVariantType.String),Signal("vencedor",NetVariantType.String)]
     public class RodadaModel{
 
         public RodadaModel(){
@@ -38,8 +38,13 @@ namespace TriviaGame{
                 string mensagem = $"{message} pessoas acertaram nessa rodada!";
                 this.ActivateSignal("rodadaFinalizada",mensagem);
             }
-            if(protocol == 'W'){
-                this.ActivateSignal("respostaErrada");
+            if(protocol == 't'){
+                message = message.Substring(1);
+                this.ActivateSignal("tempoRestante",message);
+            }
+            if(protocol == 'Z'){
+                message = message.Substring(1);
+                this.ActivateSignal("vencedor",message);
             }
         }
 

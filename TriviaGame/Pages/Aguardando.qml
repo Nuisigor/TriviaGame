@@ -6,13 +6,16 @@ import QtQuick.Window 2.12
 import TriviaGame 1.0
 
 Page{
-    
+    id: aguardo
+    signal fecha
     StackView{
         id: stackView
         anchors.fill: parent
         initialItem: Espera{
             id: espera
-            onJogo : stackView.push("Jogo.qml")
+            onJogo :{
+                stackView.push("Jogo.qml")
+            }
         }
     }
 }

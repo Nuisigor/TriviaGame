@@ -7,7 +7,7 @@ using Qml.Net.Runtimes;
 
 namespace TriviaGame{
 
-    [Signal("connectedUser")]
+    [Signal("connectedUser"),Signal("jogoFinalizado")]
     public class Login{
         public async Task dataWrite(string inputUser, string inputIP){
             Console.WriteLine(inputUser);
@@ -19,6 +19,12 @@ namespace TriviaGame{
             Program.nomePlayer = inputUser;
         }
 
+        public void fechaJogo(){
+            System.Threading.Thread.Sleep(1000);
+            Console.WriteLine("FECHAJOGO FOI");
+            this.ActivateSignal("jogoFinalizado");
+            Console.WriteLine("FECHAJOGO FOI");
+        }
         public Login(){
             Program.socket.ChatMessageReceived += connected;
         }

@@ -3,10 +3,13 @@ import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.3
 import QtQuick.Controls.Material 2.1
 import QtQuick.Window 2.12
+import QtMultimedia 5.15
 import TriviaGame 1.0
 
 Page{
     id: jogoPage
+
+    signal jogoPageFechar
 
     background: Rectangle{
         gradient : Gradient{
@@ -75,11 +78,36 @@ Page{
         height: 600
         width: 600
         anchors.centerIn: parent
+        closePolicy: Popup.CloseOnEscape
         Tema{
             id: temaPane
             anchors.fill: parent
             onTemaDialogFechar : temaPop.close()
         }
+    }
+
+    Popup{
+        id: victoryPop
+        height: 600
+        width:1000
+        anchors.centerIn: parent
+        closePolicy: Popup.CloseOnEscape
+        Vitoria{
+            id: vicotryPane
+            anchors.fill:parent
+            onVictoryScreenAbrir:{
+                victoryPop.open()
+                audioGanhou.play()
+            }
+        }
+        // Component.onCompleted:{
+        //     victoryPop.open()
+        // }
+    }
+
+    Audio{
+        id: audioGanhou
+        source: "../audio/Ganhou.ogg"
     }
 
     TemaModel{
@@ -92,6 +120,10 @@ Page{
     RodadaModel{
         id: rodadaCs
         onRodadaOwner: temaPop.open()
+    }
+
+    Login{
+        id: loginCs
     }
 
 }

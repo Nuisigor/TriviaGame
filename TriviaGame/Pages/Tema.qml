@@ -175,8 +175,8 @@ Item{
         ProgressBar{
             id: barra
             from: 0
-            to: 10
-            value: 10
+            to: 15
+            value: 15
             anchors.top: enviar.bottom
             anchors.left: parent.left
             anchors.right: parent.right

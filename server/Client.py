@@ -22,3 +22,6 @@ class Client:
 
   def add_pontos(self, pontos):
     self.pontos += pontos
+
+  def close(self):
+    self.conn.close()

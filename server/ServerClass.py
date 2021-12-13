@@ -1,5 +1,4 @@
-import threading, socket, time, random
-from collections import defaultdict
+import threading, socket, time, random, sys
 from Client import Client
 from Utils import levenshtein
 
@@ -19,6 +18,7 @@ PROTOCOLO = {
   'N': 'RESPOSTA PROXIMA',
   'W': 'RESPOSTA ERRADA',
   'a': 'TOTAL DE ACERTOS DA RODADA',
+  'r': 'FIM DA RODADA',
   'Z': 'FINALIZADO'
 }
 
@@ -26,6 +26,7 @@ class Server:
   def __init__(self, port):
     self.host = 'localhost'
     self.port = port
+    self.kill = False
     self.clients = {}
     self.clientNames = self.clients.keys()
     self.socket = None
@@ -36,6 +37,7 @@ class Server:
     self.owner = None
     self.ownerPos = 0
     self.correct = 0
+    self.reseting = False
     self.started = False
     self.respostaCensurada = False
     self.roundAtivo = False
@@ -50,7 +52,7 @@ class Server:
     print('Server started on port', self.port)
     self.commandThread = threading.Thread(target=self.command)
     self.commandThread.start()
-    while True:
+    while not self.kill:
       client, address = self.socket.accept()
       print('Client connected:', address)
       threading.Thread(target=self.handleClient, args=(client, address)).start()
@@ -63,7 +65,7 @@ class Server:
     try:
       with client:
         name = client.recv(1024).decode()
-        if name in self.clientNames:
+        if name in self.clientNames or self.reseting:
           client.close()
           return
         client = Client(client, address, name)
@@ -71,7 +73,7 @@ class Server:
 
         self.handleConnect(name)
 
-        while True:
+        while not self.reseting:
           data = client.recv()
           if not data:
             break
@@ -90,17 +92,23 @@ class Server:
             if self.handleAnswer(data, name):
               continue
 
+          if self.kill:
+            self.clients[name].close()
+            return
+
           self.send(f'M{client}: {data}')        
     except Exception as e:
       print(f'Lost connection to client {client} because of {e}')
     self.handleDisconnect(name)
   
   def send(self, data, name=None):
+    if self.reseting:
+      return
     if name and name in self.clients:
       self.clients[name].send(data + '|')
       return
-    for client in self.clients.values():
-      client.send(data + '|')
+    for client in self.clients:
+      self.clients[client].send(data + '|')
 
   '''
   self.tema.append({
@@ -141,7 +149,7 @@ class Server:
     self.clients[name].add_pontos(pontos)
 
   def command(self):
-    while True:
+    while not self.kill:
       command = input().split(' ')
       cmd = command.pop(0)
       if cmd == 'send':
@@ -156,9 +164,13 @@ class Server:
           print(', '.join(self.clientNames))
         else:
           print('Ninguem conectado')
-      if cmd == 'rodada':
-        r = threading.Thread(target=self.round)
-        r.start()
+      if cmd == 'reset':
+        self.resetServer()
+      if cmd == 'info':
+        print(self.owner, self.ownerPos, self.clientNames, self.rodada)
+      if cmd == 'kill':
+        self.stopServer()
+        sys.exit()
 
   def calcTempoRestante(self):
     return int(60 - self.roundDuration())
@@ -202,14 +214,17 @@ class Server:
 
   def handleDisconnect(self, name):
     print(name, 'disconnected')
+    try:
+      del self.clients[name]
 
-    del self.clients[name]
+      if self.reseting:
+        return
 
-    if len(self.clients) < 2:
-      self.abort = True
-
-    self.send(f'M{name} desconectou')
-    self.broadcastInfo()
+      self.send(f'M{name} desconectou')
+      self.broadcastInfo()
+    except:
+      # ESSE CLIENTE MUITO PROVAVELMENTE FOI EXCLUIDO NO RESET
+      return
     
 
   def handleTema(self, data, clientName):
@@ -270,7 +285,9 @@ class Server:
     self.setupRound()
     
     while self.rodada != len(self.tema):
-      if self.roundDuration() > 10:
+      if self.kill:
+        return
+      if self.roundDuration() > 15:
         self.send(f'OO jogador {self.owner} nao preencheu a tempo')
         self.setupRound()
 
@@ -295,6 +312,8 @@ class Server:
 
     sent = 0
     while sent != 12:
+      if self.kill:
+        return
       self.respostaCensurada = self.getRespostaCensurada(resposta)
       self.sendTema()
       sent += 1
@@ -318,22 +337,59 @@ class Server:
 
   
   def runLobby(self):
-    while True:
+    self.lobbyStarted = time.time()
+    print('ABRIU LOBBY', self.lobbyStarted)
+    while not self.kill:
       if len(self.clients) < 2:
         self.lobbyStarted = time.time()
         continue
       #TODO: ARRUMAR TEMPO
-      if time.time() - self.lobbyStarted < 7.5:
+      if time.time() - self.lobbyStarted < 30:
         continue
       else:
         self.started = True
         break
 
-    print('JOGO COMECOU')      
+    if self.kill:
+      return
+
     self.send('G')
     self.broadcastInfo()
 
-    for i in range(len(self.clients) * 2):
+    for i in range(len(self.clients)*2):
       self.round()
-      self.send('MRodada finalizada')
+      self.send('rRodada finalizada')
       time.sleep(5)
+
+
+    pontoList = list(map(lambda nome: (nome,self.clients[nome].pontos), self.clients))
+    pontoList = sorted(pontoList, key=lambda x: x[1], reverse=True)
+    listaJogadoresPontos = list(map(lambda x: f'{x[0]}', pontoList))
+
+    vencedor = listaJogadoresPontos[0] if len(listaJogadoresPontos) else '' 
+
+    self.send(f'Z{vencedor}')
+
+    if not self.kill:
+      time.sleep(3)
+      self.resetServer()
+
+  def resetServer(self):
+    self.reseting = True
+    self.tema = []
+    self.rodada = 0
+    self.startRound = 0
+    self.owner = None
+    self.ownerPos = 0
+    self.correct = 0
+    self.started = False
+    self.respostaCensurada = False
+    self.roundAtivo = False
+    self.lobbyThread = None
+    self.reseting = False
+    self.clients = {}
+    self.clientNames = self.clients.keys()
+    self.createLobbyThread()
+
+  def stopServer(self):
+    self.kill = True

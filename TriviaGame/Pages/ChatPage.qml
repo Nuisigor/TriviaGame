@@ -173,21 +173,16 @@ Item{
     Chat{
         id: chatCs
         onMessageReceived: function(message){
-            chatList.append({"mensagem": message, "cor":"#2624e3"})
+            chatList.append({"mensagem": message, "cor":"#2624E3"})
         }
     }
 
     
-    SoundEffect{
+    Audio{
         id: audioAcerto
         source: "../audio/Acerto.ogg"
     }
 
-    
-    SoundEffect{
-        id: audioErro
-        source: "../audio/Erro.ogg"
-    }
 
     RodadaModel{
         id: rodadModelCs
@@ -203,9 +198,7 @@ Item{
         }
         onRodadaFinalizada: function(message){
             chatList.append({"mensagem":message, "cor":"#B3239D"})
-        }
-        onRespostaErrada: function(){
-            audioErro.play()
+            chatList.append({"mensagem":"Rodada finalizada", "cor": "#B3239D"})
         }
     }
 

@@ -10,22 +10,6 @@ Page{
 
     signal jogo
 
-    Rectangle{
-        id: header
-        color: Qt.rgba(0,1,0,1)
-        height: parent.height / 12
-        anchors{
-            left: parent.left
-            top: parent.top
-            right: parent.right
-        }
-        Button{
-            id: botaoheader
-            text: "Texto"
-            onClicked: progressBar.addProgress()
-        }
-    }
-
     background: Rectangle{
         gradient : Gradient{
             GradientStop{
@@ -45,13 +29,13 @@ Page{
         color: "white"
         radius: 40
         anchors{
-            top: header.bottom
+            top: parent.top
             left: parent.left
             right: parent.right
             bottom: parent.bottom
             leftMargin: parent.width / 12
             rightMargin: parent.width / 12
-            topMargin: 50
+            topMargin: 100
             bottomMargin: 100
         }
         

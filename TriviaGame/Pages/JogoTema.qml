@@ -38,8 +38,35 @@ Item{
             anchors.horizontalCenter: parent.horizontalCenter
             text: " _ _ _ _ _ _ _ "
         }
+
+        ProgressBar {
+            id: tempoRodada
+            value: 60
+            from: 0 
+            to: 60
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            
+            anchors.bottomMargin: 20
+
+            function updateTempo(){
+                tempoRodada.value -= 1;
+                if(tempoRodada.value == 0){
+                    timerRodada.stop();
+                    tempoRodada.value = 60;
+                }
+            }
+        }
     }
 
+
+    Timer{
+        id: timerRodada
+        repeat: true;
+        interval:1000;
+        onTriggered: tempoRodada.updateTempo();
+    }
 
     TemaModel{
         id: temaCss
@@ -50,6 +77,14 @@ Item{
             palavra.text = valuesJogo[2]
         }
     }
-     
+    
+    RodadaModel{
+        id: rodadaCs
+        onTempoRestante: function(message){
+            const tempo = parseInt(message);
+            tempoRodada.value = tempo
+            timerRodada.start()
+        }
+    }
     
 }
