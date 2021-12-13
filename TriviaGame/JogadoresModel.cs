@@ -57,7 +57,7 @@ namespace TriviaGame{
     [Signal("updatePontosR")]
     public class JogadorPontos{
         public string Nome{get; set;}
-        public int Pontos{get;set;}
+        public string Pontos{get;set;}
         static int count = 0;
 
         public JogadorPontos(){
@@ -74,14 +74,19 @@ namespace TriviaGame{
                 message = message.Substring(1);
                 string[] values = message.Split(';');
                 Jogadores._jogadorespontos.Clear();
+                Console.WriteLine("ATEAQUIVAI");
                 foreach (string jogador in values){
                     string[] registro = jogador.Split(',');
+                    Console.WriteLine(registro[0]+" "+registro[1]);
                     Jogadores._jogadorespontos.Add(new JogadorPontos{
                         Nome = registro[0],
-                        Pontos = Int32.Parse(registro[1]),
+                        Pontos = registro[1],
                     });
+                    
                 }
+                Console.WriteLine("ATUALIZADO:" + message);
                 this.ActivateSignal("updatePontosR");
+                Console.WriteLine("POS SINAL");
             }
         }
     }

@@ -1,4 +1,5 @@
 import threading, socket, time, random
+from collections import defaultdict
 from Client import Client
 from Utils import levenshtein
 
@@ -275,7 +276,8 @@ class Server:
     self.setStartRound()
     self.roundAtivo = True
     self.send(f't{self.calcTempoRestante()}')
-    while sent != 12:
+    #TODO: VOLTAR PARA 12
+    while sent != 3:
       self.respostaCensurada = resposta #self.getRespostaCensurada(resposta, showOrder)
       self.sendTema()
       sent += 1
