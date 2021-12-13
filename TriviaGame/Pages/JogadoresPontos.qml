@@ -83,4 +83,10 @@ Item{
             repeater.model = Net.toListModel(jogadoresCs.jogadoresP)
         }
     }
+    JogadorPontos{
+        id: jogadorPontosCs
+        onUpdatePontosR:{
+            repeater.model = Net.toListModel(jogadoresCs.jogadoresP)
+        }
+    }
 }

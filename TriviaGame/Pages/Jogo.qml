@@ -80,12 +80,6 @@ Page{
             anchors.fill: parent
             onTemaDialogFechar : temaPop.close()
         }
-
-        
-
-        Component.onCompleted:{
-            temaPop.open()
-        }
     }
 
     TemaModel{
@@ -93,6 +87,11 @@ Page{
         onTemaJogo: function(tema){
             console.log(tema)
         }
+    }
+
+    RodadaModel{
+        id: rodadaCs
+        onRodadaOwner: temaPop.open()
     }
 
 }

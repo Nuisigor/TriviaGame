@@ -16,7 +16,11 @@ namespace TriviaGame{
         }
     
         public void messageReceive(string message){
-            this.ActivateSignal("messageReceived", message);
+            char protocol = message[0];
+            if(protocol == 'M'){
+                message = message.Substring(1);
+                this.ActivateSignal("messageReceived", message);
+            }
         }
     }
 

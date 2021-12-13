@@ -43,7 +43,7 @@ Item{
                             anchors.leftMargin: 10
                             width: mensagens.width / 1.2
                             height: mensagens.height / 10
-                            color: "#2624e3"
+                            color: model.cor
                             Text{
                                 id: mensagem
                                 text: model.mensagem
@@ -159,7 +159,7 @@ Item{
             function sendMessage(){
                 var message = texto.text
                 if(message !== ""){
-                    chatCs.messageSend(texto.text)
+                    chatCs.messageSend('M'+texto.text)
                     texto.text = qsTr("")
                 }
             }
@@ -168,10 +168,29 @@ Item{
     ListModel{
         id: chatList
     }
+
     Chat{
         id: chatCs
         onMessageReceived: function(message){
-            chatList.append({"mensagem": message})
+            chatList.append({"mensagem": message, "cor":"#2624e3"})
         }
     }
+
+    RodadaModel{
+        id: rodadModelCs
+        onRodadaComecou: function(message){
+            chatList.append({"mensagem": message, "cor":"#B3239D"})
+        }
+        onAcerto: function(message){
+            chatList.append({"mensagem":message, "cor": "#1DE419"})
+        }
+        onRespostaPerto: function(message){
+            chatList.append({"mensagem":message, "cor":"#C89114"})
+        }
+        onRodadaFinalizada: function(message){
+            chatList.append({"mensagem":message, "cor":"#B3239D"})
+        }
+    }
+
+
 }

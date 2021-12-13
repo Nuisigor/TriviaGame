@@ -51,9 +51,14 @@ namespace TriviaGame{
                 if (bufferSize == 0) break;
 
                 string msg = Encoding.ASCII.GetString(buffer, 0, bufferSize);
+                Console.WriteLine("SOCKET:" + msg);
 
-                Console.WriteLine(msg);
-                OnChatMessageReceived(msg);
+                string[] messages = msg.Split('|');
+                foreach (string message in messages) {
+                    if (message.Length > 0) {
+                        OnChatMessageReceived(message);
+                    }
+                }
             }
 
             Close();

@@ -1,4 +1,5 @@
 import QtQuick 2.15
+import QtQml 2.15
 import QtQuick.Controls.Material 2.5
 import QtQuick.Controls 2.2
 import TriviaGame 1.0
@@ -80,6 +81,12 @@ Item{
     Jogadores{
         id: jogadoresCs
         Component.onCompleted:{
+            repeater.model = Net.toListModel(jogadoresCs.jogadoresL)
+        }
+    }
+    Jogador{
+        id: jogadorCs
+        onUpdateJogador: function (){
             repeater.model = Net.toListModel(jogadoresCs.jogadoresL)
         }
     }

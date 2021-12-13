@@ -40,6 +40,16 @@ Item{
         }
     }
 
+
+    TemaModel{
+        id: temaCss
+        onTemaJogo: function (message){
+            let valuesJogo = message.split(';')
+            tema.text = "Tema: "+valuesJogo[0]
+            pista.text = "Pista: " + valuesJogo[1]
+            palavra.text = valuesJogo[2]
+        }
+    }
      
     
 }

@@ -174,7 +174,9 @@ Item{
         }
         ProgressBar{
             id: barra
-            value: 0.5
+            from: 0
+            to: 10
+            value: 10
             anchors.top: enviar.bottom
             anchors.left: parent.left
             anchors.right: parent.right
@@ -192,8 +194,29 @@ Item{
         }
     }
     
+    Timer{
+        id: timeme
+        interval: 1000
+        repeat:true
+        onTriggered: {
+            barra.value -= 1
+            if(barra.value === 0){
+                temaDialog.temaDialogFechar()
+            }
+        }
+    }
+
+    
     TemaModel{
         id: temaCs
+    }
+
+    RodadaModel{
+        id: rodadaCs
+        onRodadaOwner:{
+            barra.value = 10
+            timeme.start()
+        }
     }
 
 }

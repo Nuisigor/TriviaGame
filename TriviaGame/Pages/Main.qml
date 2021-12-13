@@ -136,7 +136,7 @@ ApplicationWindow {
 
                                 TextInput {
                                     id: inputUser
-                                    text: qsTr("")
+                                    text: qsTr(login1.crianome(5))
                                     x: 8
                                     y: 8
                                     width: 433
@@ -180,7 +180,7 @@ ApplicationWindow {
                                 }
                                 TextInput {
                                     id: inputIP
-                                    text: qsTr("")
+                                    text: qsTr("localhost:1338")
                                     x: 8
                                     y: 8
                                     width: 433
@@ -250,13 +250,25 @@ ApplicationWindow {
                                 else{
                                     validate.text = qsTr("")
                                     logincs.dataWrite(inputUser.text, inputIP.text)
-                                    stackView.push("Aguardando.qml")
+                                    
                                 }
                             }
+
+                            function crianome(size=5) {
+                                let nome = "";
+                                let possible = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+                                for (let i = 0; i < size; i++) nome += possible.charAt(Math.floor(Math.random() * possible.length));
+
+                                return nome ;
+                            } 
                         }
                     }
                     Login{
                         id: logincs
+                        onConnectedUser: function (){
+                            stackView.push("Aguardando.qml")
+                        }
                     }
                 }
             }

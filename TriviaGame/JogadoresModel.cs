@@ -1,51 +1,14 @@
 using System.Collections.Generic;
+using System;
 using Qml.Net;
 using Qml.Net.Runtimes;
 
 namespace TriviaGame{
-    
-    class Jogadores{
-        
-        private readonly List<Jogador> _jogadores = new List<Jogador>{
-            new Jogador{
-                Nome = "Teste"
-            },
-            new Jogador{
-                Nome = "Igor"
-            },
-            new Jogador{
-                Nome = "Getulio"
-            },
-            new Jogador{
-                Nome = "Joao"
-            },
-            new Jogador{
-                Nome = "Tchubi"
-            }
-        };
 
-        private readonly List<JogadorPontos> _jogadorespontos = new List<JogadorPontos>{
-            new JogadorPontos{
-                Nome = "Teste",
-                Pontos = 0
-            },
-            new JogadorPontos{
-                Nome = "Igor",
-                Pontos = 10
-            },
-            new JogadorPontos{
-                Nome = "Getulio",
-                Pontos = 20
-            },
-            new JogadorPontos{
-                Nome = "Joao",
-                Pontos = 30
-            },
-            new JogadorPontos{
-                Nome = "Tchubi",
-                Pontos = 40
-            }
+    class Jogadores{
+        static public List<Jogador> _jogadores = new List<Jogador>{
         };
+        static public List<JogadorPontos> _jogadorespontos = new List<JogadorPontos>{};
 
         public List<JogadorPontos> JogadoresP{
             get => _jogadorespontos;
@@ -59,15 +22,67 @@ namespace TriviaGame{
         public int JogadoresSize{
             get => _jogadores.Count;
         }
-        public class Jogador{
+    }
 
-            public string Nome{ get; set;}
+
+    [Signal("updateJogador")]
+    public class Jogador{
+
+        public string Nome{ get; set;}
+
+        static int count = 0;
+        public Jogador(){
+            if(count == 0) {
+                Program.socket.ChatMessageReceived += updateJogadores;
+                count++;
+            }
         }
-
-        public class JogadorPontos{
-            public string Nome{get; set;}
-            public int Pontos{get;set;}
+        public void updateJogadores(string message){
+            char protocol = message[0];
+            if(protocol == 'L') {
+                Console.WriteLine("Lista de jogadores recebida");
+                message = message.Substring(1);
+                string[] jogadores = message.Split(';');
+                Jogadores._jogadores.Clear();
+                foreach (string jogador in jogadores) {
+                    Jogadores._jogadores.Add(new Jogador{
+                        Nome = jogador
+                    });
+                }
+                this.ActivateSignal("updateJogador");
+            }
         }
     }
 
+    [Signal("updatePontosR")]
+    public class JogadorPontos{
+        public string Nome{get; set;}
+        public int Pontos{get;set;}
+        static int count = 0;
+
+        public JogadorPontos(){
+            if(count == 0){
+                Program.socket.ChatMessageReceived += updateJogadoresPontos;
+                count++;
+            }        
+        }
+
+        public void updateJogadoresPontos(string message){
+            char protocol = message[0];
+            if(protocol == 'P'){
+                Console.WriteLine("ATUALIZAR AQUI:" + message);
+                message = message.Substring(1);
+                string[] values = message.Split(';');
+                Jogadores._jogadorespontos.Clear();
+                foreach (string jogador in values){
+                    string[] registro = jogador.Split(',');
+                    Jogadores._jogadorespontos.Add(new JogadorPontos{
+                        Nome = registro[0],
+                        Pontos = Int32.Parse(registro[1]),
+                    });
+                }
+                this.ActivateSignal("updatePontosR");
+            }
+        }
+    }
 }

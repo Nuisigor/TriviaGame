@@ -9,7 +9,10 @@ class Client:
     return self.name
 
   def send(self, msg):
-    self.conn.send(msg.encode())
+    try:
+      self.conn.send(msg.encode())
+    except Exception as e:
+      print(self.name, e)
 
   def recv(self):
     return self.conn.recv(1024).decode()

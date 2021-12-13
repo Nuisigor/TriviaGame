@@ -64,16 +64,20 @@ Page{
             width: parent.height / 1.3
             height: parent.height / 1.3
             from: 0
-            to: 100
-            value: 80
+            to: 30
+            value: 30
             fromAngle: 0
             toAngle: Math.PI*2
             reverse: false
             function addProgress(){
-                update(value-80)
-                if(progressBar.value === 0){
-                    esperaPage.jogo()
-                }
+                update(value-1)
+                // if(progressBar.value === 0){
+                //     esperaPage.jogo()
+                // }
+            }
+
+            function resetTimer(){
+                update(30)
             }
         }
 
@@ -88,5 +92,22 @@ Page{
         }
     }
 
+    Timer {
+        id: timerEspera;
+        interval: 1000; repeat: true;
+        onTriggered: progressBar.addProgress();
+    }
 
+    EsperaModel{
+        id: esperaCs
+        onSetCounter: {
+            progressBar.resetTimer();
+            timerEspera.start();
+        }
+    }
+
+    JogoModel{
+        id:jogoCs
+        onStartGameR: esperaPage.jogo()
+    }
 }
